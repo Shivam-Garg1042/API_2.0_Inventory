@@ -1,4 +1,4 @@
-    import  { useState } from 'react';
+import React, { useState } from 'react';
 import { Search, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 const AssetVerification = () => {
@@ -28,9 +28,7 @@ const AssetVerification = () => {
     setResults(null);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     if (!oemNumber && !batteryNumber) {
       setError('Please enter either OEM Number or Battery Number');
       return;
@@ -41,8 +39,9 @@ const AssetVerification = () => {
     setResults(null);
 
     try {
-      // Replace with your actual BigQuery API endpoint
-      const apiEndpoint = 'https://your-gcp-function-url.cloudfunctions.net/asset-verification';
+      // Replace with your actual API endpoint
+      const apiEndpoint = 'http://localhost:8080/api/asset-verification'; // Local development
+      // const apiEndpoint = 'https://your-deployed-api-url/api/asset-verification'; // Production
       
       const requestBody = {
         oemNumber: oemNumber || null,
@@ -53,14 +52,15 @@ const AssetVerification = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Add any authentication headers here if needed
-          // 'Authorization': 'Bearer your-token'
+          // Add authentication headers if needed
+          // 'X-API-Key': 'your-api-key'
         },
         body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -81,20 +81,23 @@ const AssetVerification = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-12">
       <div className="max-w-4xl mx-auto">
         {/* Company Logo */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-64 h-20 bg-white rounded-full shadow-lg mb-4">
-            <img src="/chargeup_logo.png" alt="Chargeup" className='p-2'  />
+            <img
+              src="/chargeup_logo.png" // Replace with your logo path
+              alt="Chargeup"
+              className="p-4"></img>
           </div>
-          
+          {/* <p className="text-gray-600 text-sm">Your Company Name</p> */}
         </div>
 
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {/* Heading */}
-          <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
+          <h1 className="text-4xl font-medium text-gray-800 text-center mb-8">
             Asset Verification
           </h1>
 
@@ -104,7 +107,7 @@ const AssetVerification = () => {
               {/* OEM Number Input */}
               <div className="space-y-3">
                 <label htmlFor="oem" className="block text-base font-medium text-gray-700 px-1">
-                  OEM Number
+                  OEM Battery Number
                 </label>
                 <div className="relative">
                   <input
@@ -136,7 +139,7 @@ const AssetVerification = () => {
               {/* Battery Number Input */}
               <div className="space-y-3">
                 <label htmlFor="battery" className="block text-base font-medium text-gray-700 px-1">
-                  Battery Number
+                  Chargeup Battery Number
                 </label>
                 <div className="relative">
                   <input
@@ -177,7 +180,8 @@ const AssetVerification = () => {
             {/* Submit Button */}
             <div className="flex justify-center space-x-4">
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={loading || (!oemNumber && !batteryNumber)}
                 className={`px-8 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 ${
                   loading || (!oemNumber && !batteryNumber)
