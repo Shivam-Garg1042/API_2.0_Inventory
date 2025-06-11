@@ -217,7 +217,7 @@ const AssetVerification = () => {
           {/* Results Section */}
           {results && (
             <div className="mt-8 p-6 bg-gray-50 rounded-xl">
-              <div className="flex items-center space-x-2 mb-4">
+              {/* <div className="flex items-center space-x-2 mb-4">
                 <CheckCircle className="h-6 w-6 text-green-600" />
                 <h2 className="text-xl font-semibold text-gray-800">Verification Results</h2>
               </div>
@@ -226,7 +226,7 @@ const AssetVerification = () => {
                 <pre className="text-sm text-gray-700 whitespace-pre-wrap overflow-x-auto">
                   {JSON.stringify(results, null, 2)}
                 </pre>
-              </div>
+              </div> */}
               
               {/* You can customize this section based on your actual data structure */}
               {results.data && Array.isArray(results.data) && (
