@@ -7,7 +7,7 @@ export default defineConfig({
   // assetsInclude: ["**/*.glb"],
   server: {
     host: true, // Allow all hosts, equivalent to 0.0.0.0
-    port: 5173, // Default Vite port
+    port: 5174, // Default Vite port
     
       base: "Chargeup-Website",
   
